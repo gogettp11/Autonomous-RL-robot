@@ -22,7 +22,7 @@ while(True):
     upper_mask = cv.inRange(img_hsv, lower2, upper2)
     
     frame_threshold = lower_mask + upper_mask;
-    frame_threshold = cv.GaussianBlur(frame_threshold, (7,7), 2,None,2)
+    frame_threshold = cv.GaussianBlur(frame_threshold, (13,13), 5,None,5)
 
     temp_array = []
 
@@ -31,7 +31,7 @@ while(True):
     chunk_start = 0
     chunk_end = chunk_size
     for i in range(10):
-        temp_array.append(np.count_nonzero(frame_threshold[:,chunk_start:chunk_end] > 230)//1000)
+        temp_array.append(np.count_nonzero(frame_threshold[:,chunk_start:chunk_end] > 250)//1500)
         chunk_start = chunk_end
         chunk_end += chunk_size
 
