@@ -1,16 +1,26 @@
 import sounddevice as sd
 from matplotlib import pyplot as plt
+import numpy as np
+from scipy import signal
 
-fs = 44100  # Sample rate
+#hyperparams
+fs = 48000  # Sample rate
 seconds = 2  # Duration of recording
-
 sd.default.samplerate = fs
 sd.default.channels = 1
 
-# print(sd.get_status())
+def butter_highpass(cutoff, fs, order=5):
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = signal.butter(order, normal_cutoff, btype='high', analog=False)
+    return b, a
 
+print("start")
 myrecording = sd.rec(int(fs*seconds))
 sd.wait()  # Wait until recording is finished
+print("end")
 
-plt.plot(myrecording)
+myrecording = butter_highpass()
+fft = np.fft.fft(myrecording)
+plt.plot(fft)
 plt.show()
