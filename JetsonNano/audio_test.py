@@ -1,11 +1,14 @@
 import sounddevice as sd
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt 
+import matplotlib
 import numpy as np
 from scipy import signal
+import librosa
+import librosa.display
 
 #hyperparams
-fs = 48000  # Sample rate
-seconds = 2  # Duration of recording
+fs = 44100  # Sample rate
+seconds = 1  # Duration of recording
 sd.default.samplerate = fs
 sd.default.channels = 1
 
@@ -20,7 +23,8 @@ myrecording = sd.rec(int(fs*seconds))
 sd.wait()  # Wait until recording is finished
 print("end")
 
-myrecording = butter_highpass()
-fft = np.fft.fft(myrecording)
-plt.plot(fft)
-plt.show()
+mfccs = librosa.feature.mfcc(y=np.squeeze(myrecording,1), sr=fs, n_mfcc=40)
+fig, ax = plt.subplots()
+img = librosa.display.specshow(mfccs, x_axis='time', ax=ax)
+ax.set(title='MFCC')
+fig.colorbar(img, ax=ax)
