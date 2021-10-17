@@ -8,7 +8,7 @@ import librosa.display
 
 #hyperparams
 fs = 44100  # Sample rate
-seconds = 1  # Duration of recording
+seconds = 1 # Duration of recording
 sd.default.samplerate = fs
 sd.default.channels = 1
 
@@ -23,8 +23,7 @@ myrecording = sd.rec(int(fs*seconds))
 sd.wait()  # Wait until recording is finished
 print("end")
 
-mfccs = librosa.feature.mfcc(y=np.squeeze(myrecording,1), sr=fs, n_mfcc=40)
-fig, ax = plt.subplots()
-img = librosa.display.specshow(mfccs, x_axis='time', ax=ax)
-ax.set(title='MFCC')
-fig.colorbar(img, ax=ax)
+f = np.fft.fft(np.squeeze(myrecording))
+print(f)
+plt.plot(f)
+plt.show()
