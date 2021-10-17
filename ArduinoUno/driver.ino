@@ -55,6 +55,5 @@ void loop() {
     }else if(direction=='F'){
       steer.goForward(1000);
     }else{ return; } // got some rubbish message
-      delay(1000);
   }
 }

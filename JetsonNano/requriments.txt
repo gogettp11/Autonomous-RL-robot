@@ -2,5 +2,5 @@ pyserial==3.5
 tensorflow==2.6.0
 opencv-python==4.5.3.56
 numpy==1.19.5
-sounddevice
+sounddevice=0.4.2
 scipy
