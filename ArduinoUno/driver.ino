@@ -1,48 +1,60 @@
 #include <AFMotor.h>
 
-AF_DCMotor motor(2);
+AF_DCMotor motor_left(2);
+AF_DCMotor motor_right(1);
+
+struct MotorHandler{
+    AF_DCMotor motor_left(2);
+    AF_DCMotor motor_right(1);
+
+    void goRight(int miliseconds){
+      this->motor_left.setSpeed(200)
+      this->motor_right.setSpeed(100)
+      this->motor_left.run(FORWARD);
+      this->motor_right.run(FORWARD);
+      delay(miliseconds);
+      this->motor_left.run(RELEASE);
+      this->motor_right.run(RELEASE);
+    }
+    void goForward(int seconds){
+      this->motor_left.setSpeed(200);
+      this->motor_right.setSpeed(200);
+      this->motor_right.run(FORWARD);
+      this->motor_left.run(FORWARD);
+      delay(miliseconds);
+      this->motor_left.run(RELEASE);
+      this->motor_right.run(RELEASE);
+    }
+    void goLeft(int miliseconds){
+      this->motor_left.setSpeed(100);
+      this->motor_right.setSpeed(200);
+      this->motor_right.run(FORWARD);
+      this->motor_left.run(FORWARD);
+      delay(miliseconds);
+      this->motor_left.run(RELEASE);
+      this->motor_right.run(RELEASE);
+    }
+}steer;
 
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
   Serial.write("it works!");
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  // if(Serial.available()>0){
-  //     motor.setSpeed(200);
-  //     motor.run(FORWARD);
-  //     delay(2000);
-  //     motor.run(RELEASE);
-  //     delay(2000);
-  // }
   if(Serial.available()>0){
-    char left_right = (char)(Serial.read());
-    motor.setSpeed(200);
-    if(left_right=='l'){
-      Serial.write("FORWARD\n");
-      motor.run(FORWARD);
-    }else if(left_right=='r'){
-      Serial.write("BACKWARD\n");
-      motor.run(BACKWARD);
-    }else
-      Serial.write("WRONG SIGN\n"+left_right);
-      delay(2000);
-      motor.run(RELEASE);
+
+    char direction = (char)(Serial.read()); // possible directions: L - left, R - right, F - forward
+    Serial.write("%c ", direction);
+    
+    if(direction=='L'){
+      steer.goLeft(1000);
+    }else if(direction=='R'){
+      steer.goRight(1000);
+    }else if(direction=='F'){
+      steer.goForward(1000);
+    }else{ return; } // got some rubbish message
+      delay(1000);
   }
 }
-// if(Serial.available()>0){
-//     char left_right = (char)(Serial.read());
-//       motor.setSpeed(200);
-//       if(left_right=='l'){
-//         Serial.write("FORWARD\n");
-//         motor.run(FORWARD);
-//       }else if(left_right=='r'){
-//         Serial.write("BACKWARD\n");
-//         motor.run(BACKWARD);
-//       }
-//       delay(2000);
-//       motor.run(RELEASE);
-//   }
