@@ -15,7 +15,7 @@ class Microphone:
         f_imag = np.fft.fft(np.squeeze(myrecording)).imag
         f_real = np.fft.fft(np.squeeze(myrecording)).real
 
-        return np.sqrt(np.square(f_real[:2000]) + np.square(f_imag[:2000])) # up to 2000hz
+        return max(np.sqrt(np.square(f_real[900:1100]) + np.square(f_imag[900:1100]))) # about 1000hz
 
 if __name__ == 'main':
     pass

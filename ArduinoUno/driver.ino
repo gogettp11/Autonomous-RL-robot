@@ -45,15 +45,23 @@ void setup() {
 void loop() {
   if(Serial.available()>0){
 
-    char direction = (char)(Serial.read()); // possible directions: L - left, R - right, F - forward
-    Serial.write("%c ", direction);
+    // read data
+    String incoming_data = Serial.readString(); // data format: Direction [1 byte char], Movement Lenghts [number converted to string]
+    char direction = incoming_data[0];
+    incoming_data.remove(0);
+    int miliseconds = incoming_data.toInt();
+
+    if(miliseconds == 0)
+      miliseconds = 500;
     
+    // move
     if(direction=='L'){
-      steer.goLeft(1000);
+      steer.goLeft(miliseconds);
     }else if(direction=='R'){
-      steer.goRight(1000);
+      steer.goRight(miliseconds);
     }else if(direction=='F'){
-      steer.goForward(1000);
+      steer.goForward(miliseconds);
     }else{ return; } // got some rubbish message
+    Serial.write("%c", direction);
   }
 }
