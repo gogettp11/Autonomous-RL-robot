@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from ..abc_vision import Camera_abc
 
 # lower boundary RED color range values; Hue (0 - 10)
 lower1 = np.array([0, 100, 100])
@@ -11,7 +12,7 @@ upper2 = np.array([179,255,255])
 
 CHUNKS = 5
 
-class Camera:
+class Camera_sim(Camera_abc):
     def __init__(self):
         self.__camera = cv.VideoCapture(0)
 

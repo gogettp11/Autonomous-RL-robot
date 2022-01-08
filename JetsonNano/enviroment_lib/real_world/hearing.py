@@ -1,7 +1,8 @@
 import sounddevice as sd
 import numpy as np
+from ..abc_hearing import Microphone_abc
 
-class Microphone:
+class Microphone(Microphone_abc):
     def __init__(self):
         self.__sample_rate = 44100
         self.__seconds = 1

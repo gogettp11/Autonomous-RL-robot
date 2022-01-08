@@ -1,18 +1,28 @@
 import gym
 
-from enviroment_lib.communication_lib import Steer
-from enviroment_lib.hearing import Microphone
-from enviroment_lib.vision import Camera
+#real
+from JetsonNano.enviroment_lib.real_world.steer import Steer
+from JetsonNano.enviroment_lib.real_world.hearing import Microphone
+from JetsonNano.enviroment_lib.real_world.vision import Camera
+#simulation
+from JetsonNano.enviroment_lib.simulation.steer import Steer_sim
+from JetsonNano.enviroment_lib.simulation.hearing import Microphone_sim
+from JetsonNano.enviroment_lib.simulation.vision import Camera_sim
 
 SOUND_REWARD_THRESHOLD = 80
 SOUND_FINISH_THRESHOLD = 2000
 VISION_REWARD_THRESHOLD = 4
 
 class RealWorldEnv(gym.Env):
-    def __init__(self):
-        self.__steer = Steer()
-        self.__camera = Camera()
-        self.__microphone = Microphone()
+    def __init__(self, simulation = False):
+        if simulation:
+            self.__steer = Steer_sim()
+            self.__camera = Camera_sim()
+            self.__microphone = Microphone_sim()
+        else:
+            self.__steer = Steer()
+            self.__camera = Camera()
+            self.__microphone = Microphone()
         self.__movement_len = 1000 # in miliseconds
         self.sound_before = 0
 

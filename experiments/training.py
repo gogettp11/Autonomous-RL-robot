@@ -60,23 +60,23 @@ class MyModel(tf.keras.Model):
     x = self.dense3(self.dense2(self.dense1(inputs)))
     return self.dense4(x)
 
-#region global variables
+#init enviroment
 env = gym.make('CartPole-v0')
 possible_actions = [i for i in range(env.action_space.n)]
 qmodel_target = MyModel(env.action_space.n, env.observation_space.shape[0])
 qmodel_training = MyModel(env.action_space.n, env.observation_space.shape[0])
-max_runs = 20000
 buffer = ReplayBuffer(10000,tf.summary.create_file_writer(f"./experiments/logs/{datetime.now()}"))
+#endinit enviroment
+max_runs = 20000
 epsilon_greedy = 1.00
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, clipnorm=1.0)
 batch_size = 64
 discount_factor = 0.99
 loss_function = tf.keras.losses.Huber()
-frames = 0
 update_target = 6000
 update_training = 4
-#endregion
 
+frames = 0
 loss = 0
 
 for i in range(max_runs):
@@ -130,7 +130,7 @@ for i in range(max_runs):
               grads = tape.gradient(loss, qmodel_training.trainable_variables)
               optimizer.apply_gradients(zip(grads, qmodel_training.trainable_variables))
               buffer.add_last_loss(loss, frames)
-              if not(frames % update_target):
+              if not(frames % update_target*update_training):
                 print(f"loss: {loss} epsilon: {epsilon_greedy} model saved!")
                 qmodel_target.set_weights(qmodel_training.get_weights())
                 qmodel_target.save("./experiments/model")
