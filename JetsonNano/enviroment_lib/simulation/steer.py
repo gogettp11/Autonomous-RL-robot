@@ -1,4 +1,4 @@
-import serial
+import rospy
 from ..abc_steer import Steer_abc
 
 class Steer_sim(Steer_abc):

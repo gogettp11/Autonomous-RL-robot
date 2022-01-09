@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import rospy
 from ..abc_vision import Camera_abc
 
 # lower boundary RED color range values; Hue (0 - 10)

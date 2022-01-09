@@ -1,13 +1,10 @@
-import sounddevice as sd
+import rospy
 import numpy as np
 from ..abc_hearing import Microphone_abc
 
 class Microphone_sim(Microphone_abc):
     def __init__(self):
-        self.__sample_rate = 44100
-        self.__seconds = 1
-        sd.default.samplerate = self.__sample_rate
-        sd.default.channels = 1
+        pass
     
     def returnFrequenciesMagnitudes(self):
         myrecording = sd.rec(int(self.__sample_rate*self.__seconds))
