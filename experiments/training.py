@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 import gym
 from random import choice
-from collections import deque
 from copy import deepcopy
 from datetime import datetime
 from agent_lib import MyModel, ReplayBuffer
@@ -12,16 +11,19 @@ env = gym.make('CartPole-v0')
 possible_actions = [i for i in range(env.action_space.n)]
 qmodel_target = MyModel(env.action_space.n, env.observation_space.shape[0])
 qmodel_training = MyModel(env.action_space.n, env.observation_space.shape[0])
-buffer = ReplayBuffer(10000,tf.summary.create_file_writer(f"./experiments/logs/{datetime.now()}"))
+log_dir = f"./experiments/logs/{datetime.now().strftime('%H%M%S')}"
+buffer = ReplayBuffer(100000,tf.summary.create_file_writer(log_dir))
 #endinit enviroment
 max_runs = 20000
-epsilon_greedy = 1.00
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.1, clipnorm=1.0)
-batch_size = 64
+epsilon_greedy = 1.0
+min_epsilon = 0.1
+max_epsilon_frames = 10000
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.005, clipnorm=1.0)
+batch_size = 32
 discount_factor = 0.99
 loss_function = tf.keras.losses.Huber()
-update_target = 500
-update_training = 3
+update_target = 4000
+update_training = 4
 
 frames = 0
 loss = 0
@@ -46,7 +48,7 @@ for i in range(max_runs):
 
         #region training
         if not(frames % update_training) and buffer.size() > batch_size:
-              epsilon_greedy = max(epsilon_greedy-0.001, 0.15)
+              epsilon_greedy = max(epsilon_greedy-0.001, min_epsilon)
               # train qmodel_target
               indices = np.random.choice(range(buffer.size()), size=batch_size)
 
@@ -76,7 +78,6 @@ for i in range(max_runs):
               # Backpropagation
               grads = tape.gradient(loss, qmodel_training.trainable_variables)
               optimizer.apply_gradients(zip(grads, qmodel_training.trainable_variables))
-              buffer.add_last_loss(loss, frames)
               if not(frames % update_target*update_training):
                 print(f"loss: {loss} epsilon: {epsilon_greedy} model saved!")
                 qmodel_target.set_weights(qmodel_training.get_weights())
@@ -87,10 +88,12 @@ for i in range(max_runs):
               #   qmodel_target.save("./experiments/model")
         #endregion
     
+    if frames > max_epsilon_frames:
+      min_epsilon = 0.0
     #tracking all rewards
     buffer.add_episode_reward(episode_reward, i)
+    buffer.add_epsilon_greedy(epsilon_greedy, i)
+    buffer.add_last_loss(loss, i)
     mean_rewards = buffer.last_runs_mean_reward()
-    if not i%12:
-      print(f"mean reward after run {i}: {mean_rewards}, last loss: {loss}, epsilon: {epsilon_greedy}")
     if mean_rewards > 190:
         break

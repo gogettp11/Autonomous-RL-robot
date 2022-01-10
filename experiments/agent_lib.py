@@ -25,20 +25,21 @@ class ReplayBuffer():
       self.done_history.append(done)
   
   def add_episode_reward(self, episode_reward : float, step: int):
-      if self.summary_writer:
-        tf.summary.scalar('episode_reward', episode_reward, step=step)
+      tf.summary.scalar('episode_reward', episode_reward, step=step)
       self.last_runs_rewards.append(episode_reward)
   
   def last_runs_mean_reward(self):
       return np.mean(self.last_runs_rewards)
   
   def add_last_loss(self, loss : float, step : int):
-      if self.summary_writer:
-        tf.summary.scalar('loss', loss, step=step)
+      tf.summary.scalar('loss', loss, step=step)
       self.last_optimalization_losses.append(loss)
   
   def last_losses_mean(self):
       return np.mean(self.last_optimalization_losses)
+
+  def add_epsilon_greedy(self, epsilon, step):
+    tf.summary.scalar('epsilon', epsilon, step=step)
 
   def size(self):
     return len(self.state_history)
