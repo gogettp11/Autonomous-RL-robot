@@ -1,2 +1,2 @@
-./experiments/logs
-./experiments/__pycache__
+experiments/logs
+experiments/__pycache__
