@@ -7,7 +7,7 @@ from datetime import datetime
 from agent_lib import MyModel, ReplayBuffer
 
 #init enviroment
-env = gym.make('CartPole-v0')
+env = gym.make('CartPole-v1')
 possible_actions = [i for i in range(env.action_space.n)]
 qmodel_target = MyModel(env.action_space.n, env.observation_space.shape[0])
 qmodel_training = MyModel(env.action_space.n, env.observation_space.shape[0])
