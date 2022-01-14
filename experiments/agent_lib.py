@@ -56,3 +56,17 @@ class MyModel(tf.keras.Model):
   def call(self, inputs):
     x = self.dense3(self.dense2(self.dense1(inputs)))
     return self.dense4(x)
+
+class A2C(tf.keras.Model):
+
+  def __init__(self, actions_n, obs_n):
+    super().__init__()
+    self.dense1 = tf.keras.layers.Dense(obs_n, activation=tf.nn.relu)
+    self.dense2 = tf.keras.layers.Dense(6, activation=tf.nn.relu)
+    self.dense3 = tf.keras.layers.Dense(6, activation=tf.nn.tanh)
+    self.actor = tf.keras.layers.Dense(actions_n, activation=tf.nn.softmax)
+    self.critic = tf.keras.layers.Dense(1) # state value
+
+  def call(self, inputs):
+    x = self.dense3(self.dense2(self.dense1(inputs)))
+    return self.actor(x), self.critic(x)
