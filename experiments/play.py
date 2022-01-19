@@ -14,7 +14,7 @@ for i in range(runs):
     temp_rewards = 0
     while not done:
         t_obs = tf.expand_dims(tf.Variable(obs),axis=0)
-        obs , reward, done, _= env.step(tf.argmax(tf.squeeze(qmodel_target(t_obs))).numpy())
+        obs , reward, done, _= env.step(tf.argmax(tf.squeeze(qmodel_target(t_obs)[0])).numpy())
         temp_rewards += reward
         env.render()
     mean_rewards.append(temp_rewards)

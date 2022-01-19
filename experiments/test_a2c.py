@@ -9,7 +9,7 @@ env = gym.make('CartPole-v0')
 possible_actions = [i for i in range(env.action_space.n)]
 qmodel_training = A2C(env.action_space.n, env.observation_space.shape[0])
 runs = 15000
-buffer = ReplayBuffer(300, tf.summary.create_file_writer(f"./logs/{datetime.now().strftime('%H%M%S')}"))
+buffer = ReplayBuffer(300, tf.summary.create_file_writer(f"./experiments/logs/{datetime.now().strftime('%H%M%S')}"))
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.005, clipnorm=1.0)
 discount_factor = 0.95
 frames = 0
@@ -30,7 +30,7 @@ for episodes_count in range(runs):
         buffer.add_sars(tf.squeeze(t_obs),action, reward , tf.squeeze(estimates), done)
     
     buffer.rewards_history[-1] = -1
-    buffer.state_next_history[-1] = 0
+    buffer.state_next_history[-1] = 0 # values calculated by Actor, its not done in GradientTape beacause we don't want to calculate gradient on these
     # calculate state values in reverse order
     discounts = [j for j in range(buffer.size())]
     discount_factor_vec = tf.Variable([discount_factor for j in range(buffer.size())])
@@ -42,26 +42,26 @@ for episodes_count in range(runs):
     stacked_states = tf.stack(buffer.state_history)
     #calculate critic loss
     with tf.GradientTape() as tape:
-        distribution, values = qmodel_training(stacked_states)
+        _, values = qmodel_training(stacked_states)
         advantages = q_values - values
         loss_critic = tf.math.reduce_mean(tf.math.square(advantages))
     grads_critic = tape.gradient(loss_critic, qmodel_training.trainable_variables, unconnected_gradients=tf.UnconnectedGradients.ZERO)
     #calculate actor loss
     with tf.GradientTape() as tape:
-        distribution, values = qmodel_training(stacked_states)
+        distribution, _ = qmodel_training(stacked_states)
         distribution_actions = tf.gather(distribution,buffer.action_history, axis = 1,batch_dims=1)
         loss_actor = tf.math.reduce_mean(advantages*tf.math.log(distribution_actions)) # minus log = gradient ascend
     grads_actor = tape.gradient(loss_actor, qmodel_training.trainable_variables, unconnected_gradients=tf.UnconnectedGradients.ZERO)
-    # grads_critic = tape.gradient(loss_critic, qmodel_training.trainable_variables)
     optimizer.apply_gradients(zip(grads_actor+grads_critic, qmodel_training.trainable_variables))
 
     if not(episodes_count%50):
-        print(f"episode: {episodes_count} loss: {loss_actor},{loss_critic} distribution: {distribution[-3:-1]} q_values: {advantages.numpy()}")
+        print(f"episode: {episodes_count} loss: {loss_actor},{loss_critic} distribution: {distribution[0]}")
     buffer.add_last_loss(loss_actor, episodes_count, 'actor_loss')
     buffer.add_last_loss(loss_critic, episodes_count, 'critic_loss')
     buffer.add_episode_reward(np.sum(buffer.rewards_history),episodes_count)
+    buffer.add_cutom_data_tensorboard(tf.reduce_mean(advantages), episodes_count, 'mean advantages')
     buffer.clear()
 
     if(buffer.last_runs_mean_reward() > 190):
-        qmodel_training.save("./model")
+        qmodel_training.save("./experiments/model")
         break

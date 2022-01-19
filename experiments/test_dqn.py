@@ -19,7 +19,7 @@ epsilon_greedy = 1.0
 min_epsilon = 0.1
 max_epsilon_frames = 10000
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.005, clipnorm=1.0)
-batch_size = 32
+batch_size = 69
 discount_factor = 0.99
 loss_function = tf.keras.losses.Huber()
 update_target = 4000

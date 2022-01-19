@@ -10,18 +10,13 @@ from datetime import datetime
 
 env = gym.make('CartPole-v0')
 possible_actions = [i for i in range(env.action_space.n)]
-qmodel_target = MyModel(env.action_space.n, env.observation_space.shape[0])
-qmodel_training = MyModel(env.action_space.n, env.observation_space.shape[0])
+qmodel_training = Reinforce(env.action_space.n, env.observation_space.shape[0])
 runs = 20000
-buffer = ReplayBuffer(300, tf.summary.create_file_writer(f"./logs/{datetime.now().strftime('%H%M%S')}"))
-epsilon_greedy = 1.00
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, clipnorm=1.0)
-batch_size = 64
+buffer = ReplayBuffer(300, tf.summary.create_file_writer(f"./experiments/logs/{datetime.now().strftime('%H%M%S')}"))
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.005, clipnorm=1.0)
 discount_factor = 0.95
 loss_function = tf.keras.losses.Huber()
 frames = 0
-update_target = 10000
-update_training = 5
 q_values = []
 #endregion
 
@@ -37,11 +32,11 @@ for episodes_count in range(runs):
         obs , reward, done, _= env.step(action)
         buffer.add_sars(tf.squeeze(t_obs),action, reward ,tf.Variable(obs), done)
     
-    buffer.rewards_history[-1] = -1
-    mean_reward = tf.Variable(np.mean(buffer.rewards_history), dtype=tf.float32)
+    buffer.rewards_history[-1] = 0
+    mean_reward = tf.Variable(np.mean(buffer.rewards_history), dtype=tf.float32)*0.75
     q_values = []
     # calculate Q values in reverse order
-    q_values.append(tf.Variable(buffer.rewards_history[-1],dtype = tf.float32))
+    q_values.append(tf.Variable(buffer.rewards_history[-1] - mean_reward,dtype = tf.float32))
     for j in range(2,buffer.size()+1):
         q_values.append(tf.Variable(buffer.rewards_history[-j] + discount_factor*q_values[j-2] - mean_reward))
     
@@ -51,16 +46,17 @@ for episodes_count in range(runs):
     with tf.GradientTape() as tape:
         distribution = qmodel_training(tf.stack(buffer.state_history))
         distribution_actions = tf.gather(distribution,buffer.action_history, axis = 1,batch_dims=1)
-        loss = tf.math.reduce_mean(q_values*-tf.math.log(distribution_actions))
+        loss = tf.math.reduce_mean(q_values*tf.math.log(distribution_actions))
     grads = tape.gradient(loss, qmodel_training.trainable_variables)
     optimizer.apply_gradients(zip(grads, qmodel_training.trainable_variables))
 
     if not(episodes_count%50):
-        print(f"episode: {episodes_count} mean_reward: {mean_reward.numpy()}, loss: {loss}, distribution: {distribution[-3:-1]} q_values: {q_values.numpy()}")
+        print(f"episode: {episodes_count} mean_reward: {mean_reward.numpy()}, loss: {loss}, distribution: {distribution[-3:-1]}")
     buffer.add_last_loss(loss, episodes_count)
     buffer.add_episode_reward(np.sum(buffer.rewards_history),episodes_count)
+    buffer.add_cutom_data_tensorboard(tf.reduce_mean(q_values), episodes_count, 'mean qvalues')
     buffer.clear()
 
     if(buffer.last_runs_mean_reward() > 190):
-        qmodel_training.save("./model")
+        qmodel_training.save("./experiments/model")
         break

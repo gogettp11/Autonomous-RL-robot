@@ -31,15 +31,25 @@ class ReplayBuffer():
   def last_runs_mean_reward(self):
       return np.mean(self.last_runs_rewards)
   
-  def add_last_loss(self, loss : float, step : int):
-      tf.summary.scalar('loss', loss, step=step)
+  def add_last_loss(self, loss : float, step : int, label:str= 'loss'):
+      tf.summary.scalar(label, loss, step=step)
       self.last_optimalization_losses.append(loss)
+  
+  def add_cutom_data_tensorboard(self, loss : float, step : int, label:str= 'loss'):
+      tf.summary.scalar(label, loss, step=step)
   
   def last_losses_mean(self):
       return np.mean(self.last_optimalization_losses)
 
   def add_epsilon_greedy(self, epsilon, step):
     tf.summary.scalar('epsilon', epsilon, step=step)
+  
+  def clear(self):
+    self.state_history.clear()
+    self.action_history.clear()
+    self.rewards_history.clear()
+    self.state_next_history.clear()
+    self.done_history.clear()
 
   def size(self):
     return len(self.state_history)
@@ -52,6 +62,19 @@ class MyModel(tf.keras.Model):
     self.dense2 = tf.keras.layers.Dense(6, activation=tf.nn.relu)
     self.dense3 = tf.keras.layers.Dense(6, activation=tf.nn.tanh)
     self.dense4 = tf.keras.layers.Dense(actions_n)
+
+  def call(self, inputs):
+    x = self.dense3(self.dense2(self.dense1(inputs)))
+    return self.dense4(x)
+
+class Reinforce(tf.keras.Model):
+
+  def __init__(self, actions_n, obs_n):
+    super().__init__()
+    self.dense1 = tf.keras.layers.Dense(obs_n, activation=tf.nn.relu)
+    self.dense2 = tf.keras.layers.Dense(6, activation=tf.nn.relu)
+    self.dense3 = tf.keras.layers.Dense(6, activation=tf.nn.tanh)
+    self.dense4 = tf.keras.layers.Dense(actions_n, activation=tf.nn.softmax)
 
   def call(self, inputs):
     x = self.dense3(self.dense2(self.dense1(inputs)))
