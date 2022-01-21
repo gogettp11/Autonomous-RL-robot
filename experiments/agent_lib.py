@@ -93,3 +93,15 @@ class A2C(tf.keras.Model):
   def call(self, inputs):
     x = self.dense3(self.dense2(self.dense1(inputs)))
     return self.actor(x), self.critic(x)
+  
+class DPG(tf.keras.Model):
+
+  def __init__(self, actions_n, obs_n):
+    super().__init__()
+    self.dense1 = tf.keras.layers.Dense(obs_n, activation=tf.nn.relu)
+    self.dense3 = tf.keras.layers.Dense(20, activation=tf.nn.relu)
+    self.dense6 = tf.keras.layers.Dense(actions_n, activation=tf.nn.tanh)
+  
+  def call(self, inputs):
+    x = self.dense3(self.dense1(inputs))
+    return self.dense6(x)
