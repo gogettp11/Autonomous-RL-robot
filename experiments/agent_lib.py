@@ -54,17 +54,16 @@ class ReplayBuffer():
   def size(self):
     return len(self.state_history)
 
-class MyModel(tf.keras.Model):
+class DQN(tf.keras.Model):
 
   def __init__(self, actions_n, obs_n):
     super().__init__()
     self.dense1 = tf.keras.layers.Dense(obs_n, activation=tf.nn.relu)
-    self.dense2 = tf.keras.layers.Dense(6, activation=tf.nn.relu)
-    self.dense3 = tf.keras.layers.Dense(6, activation=tf.nn.tanh)
+    self.dense2 = tf.keras.layers.Dense(25, activation=tf.nn.relu)
     self.dense4 = tf.keras.layers.Dense(actions_n)
 
   def call(self, inputs):
-    x = self.dense3(self.dense2(self.dense1(inputs)))
+    x = self.dense2(self.dense1(inputs))
     return self.dense4(x)
 
 class Reinforce(tf.keras.Model):

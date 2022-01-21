@@ -4,13 +4,13 @@ import gym
 from random import choice
 from copy import deepcopy
 from datetime import datetime
-from agent_lib import MyModel, ReplayBuffer
+from agent_lib import DQN, ReplayBuffer
 
 #init enviroment
 env = gym.make('CartPole-v1')
 possible_actions = [i for i in range(env.action_space.n)]
-qmodel_target = MyModel(env.action_space.n, env.observation_space.shape[0])
-qmodel_training = MyModel(env.action_space.n, env.observation_space.shape[0])
+qmodel_target = DQN(env.action_space.n, env.observation_space.shape[0])
+qmodel_training = DQN(env.action_space.n, env.observation_space.shape[0])
 log_dir = f"./experiments/logs/{datetime.now().strftime('%H%M%S')}"
 buffer = ReplayBuffer(100000,tf.summary.create_file_writer(log_dir))
 #endinit enviroment

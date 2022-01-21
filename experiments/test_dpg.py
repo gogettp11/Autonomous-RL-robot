@@ -12,8 +12,8 @@ env = gym.make('MountainCarContinuous-v0')
 actor = DPG(env.action_space.shape[0], env.observation_space.shape[0])
 actor_target = DPG(env.action_space.shape[0], env.observation_space.shape[0])
 
-critic = DQN(env.action_space.shape[0] + env.observation_space.shape[0], 1)
-critic_target = DQN(env.action_space.shape[0] + env.observation_space.shape[0], 1)
+critic = DQN(1, env.action_space.shape[0] + env.observation_space.shape[0])
+critic_target = DQN(1, env.action_space.shape[0] + env.observation_space.shape[0])
 
 critic_target.set_weights(critic.get_weights())
 actor_target.set_weights(actor.get_weights())
@@ -44,14 +44,14 @@ for episodes_count in range(runs):
     frames = 0
     while not done and frames < max_steps:
         frames += 1
-        t_obs = tf.expand_dims(tf.Variable(obs),axis=0)
+        t_obs = tf.expand_dims(tf.Variable(obs, dtype=tf.float32),axis=0)
 
         noise = noise_scale*np.random.normal(loc=0,scale=1.0,size=env.action_space.shape[0])
         action = tf.squeeze(actor(t_obs))
         action = np.clip(action.numpy()+noise, -1, 1) #action space from 1 to -1
 
         obs , reward, done, _= env.step(action)
-        buffer.add_sars(tf.squeeze(t_obs),action, reward ,tf.Variable(obs), done)
+        buffer.add_sars(tf.squeeze(t_obs),action, reward ,tf.Variable(obs, dtype=tf.float32), done)
         episode_reward += reward
 
         #region training
