@@ -21,7 +21,7 @@ def sigmoid(x):
 
 # derivative
 def dsigmoid(y):
-    return -1 # 1.0 - y**2
+    return 1 # 1.0 - y**2
 
 class NN:
     def __init__(self, ni, nh, no):
@@ -88,7 +88,7 @@ class NN:
         # calculate error terms for output
         output_deltas = [0.0] * self.no
         for k in range(self.no):
-            error = (targets[k]-self.ao[k])**2/2*samples #MSE
+            error = 2*(self.ao[k]-targets[k])/samples #MSE
             output_deltas[k] = dsigmoid(self.ao[k]/samples) * error
 
         # calculate error terms for hidden
@@ -103,7 +103,7 @@ class NN:
         for j in range(self.nh):
             for k in range(self.no):
                 change = output_deltas[k]*(self.ah[j]/samples)
-                self.wo[j][k] = self.wo[j][k] + N*change + M*self.co[j][k]
+                self.wo[j][k] = self.wo[j][k] - N*change - M*self.co[j][k]
                 self.co[j][k] = change
                 #print N*change, M*self.co[j][k]
 
@@ -111,7 +111,7 @@ class NN:
         for i in range(self.ni):
             for j in range(self.nh):
                 change = hidden_deltas[j]*(self.ai[i]/samples)
-                self.wi[i][j] = self.wi[i][j] + N*change + M*self.ci[i][j]
+                self.wi[i][j] = self.wi[i][j] - N*change - M*self.ci[i][j]
                 self.ci[i][j] = change
 
         # calculate error
@@ -175,7 +175,7 @@ def demo():
     # create a network with two input, two hidden, and one output nodes
     n = NN(2, 3, 1)
     # train it with some patterns
-    n.train(pat, 1000, 0.00005, 0, 5)
+    n.train(pat, 1000, 0.005, 0.001, 3)
     # test it
     n.test(pat2)
 
