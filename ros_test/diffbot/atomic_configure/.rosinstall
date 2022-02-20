@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/jetkendo/ros_test/diffbot/devel/setup.sh
