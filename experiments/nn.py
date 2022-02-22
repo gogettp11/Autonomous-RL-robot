@@ -105,7 +105,6 @@ class NN:
                 change = output_deltas[k]*(self.ah[j]/samples)
                 self.wo[j][k] = self.wo[j][k] - N*change - M*self.co[j][k]
                 self.co[j][k] = change
-                #print N*change, M*self.co[j][k]
 
         # update input weights
         for i in range(self.ni):

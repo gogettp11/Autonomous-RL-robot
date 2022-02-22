@@ -32,7 +32,7 @@ def main():
 
     image = rospy.Subscriber("/camera1_ros/image_raw", Image, cb)
 
-    state_msg.torque.y = 8
+    state_msg.torque.x = -5
     
     rospy.wait_for_service('/gazebo/apply_body_wrench')
     set_state = rospy.ServiceProxy('/gazebo/apply_body_wrench', ApplyBodyWrench)
@@ -43,13 +43,15 @@ def main():
     pos = get_model_srv(model)
     x = pos.pose.orientation.x
     y = pos.pose.orientation.y
-    print(f'x: {x} y: {y}')
+    z = pos.pose.orientation.y
+    w = pos.pose.orientation.w
+    print(f'x: {x} y: {y} z: {z} w:{w}')
 
 
-    resp = set_state(wrench=state_msg,
-                    duration = rospy.Duration(0), body_name = 'TinyBot_camera_friction::left_wheel')
-    resp = set_state(wrench=state_msg,
-                    duration = rospy.Duration(0), body_name = 'TinyBot_camera_friction::right_wheel')
+    resp = set_state(wrench=state_msg, reference_frame = 'TinyBot_camera_friction::left_wheel',
+                    duration = rospy.Duration(2), body_name = 'TinyBot_camera_friction::left_wheel')
+    resp = set_state(wrench=state_msg, reference_frame = 'TinyBot_camera_friction::left_wheel',
+                    duration = rospy.Duration(2), body_name = 'TinyBot_camera_friction::right_wheel')
     print(resp)
 
     # cv.imshow('title', DATA)

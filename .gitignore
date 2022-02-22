@@ -1,3 +1,4 @@
 experiments/logs
 experiments/__pycache__
 experiments/model
+ros_test/gazebo_plugins/build
