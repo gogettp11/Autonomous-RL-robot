@@ -54,22 +54,20 @@ namespace gazebo
       }
       this->model = _model;
 
-      std::cerr << "1\n";
       // Create the node
       this->node = transport::NodePtr(new transport::Node());
-      std::cerr << "2\n";
+
       this->node->Init(this->model->GetWorld()->Name());
-      std::cerr << "3\n";
+
       // Create a topic name  
       std::string topicName = "~/vel_cmd";
 
       // Subscribe to the topic, and register a callback
       this->sub = this->node->Subscribe(topicName,
       &VelodynePlugin::OnMsg, this);
-      std::cerr << "4\n";
 
-      this->joint_left = _model->GetJoints()[0]; //left
-      this->joint_right = _model->GetJoints()[1]; //right
+      this->joint_left = _model->GetJoints()[1]; //left
+      this->joint_right = _model->GetJoints()[2]; //right
 
       // Setup a P-controller, with a gain of 0.1.
       this->pid = common::PID(0.1, 0, 0);
@@ -77,22 +75,11 @@ namespace gazebo
       // Apply the P-controller to the joint.
       this->model->GetJointController()->SetVelocityPID(
           this->joint_left->GetScopedName(), this->pid);
-      
-
-      // Set the joint's target velocity. This target velocity is just
-      // for demonstration purposes.
-      this->model->GetJointController()->SetVelocityTarget(
-          this->joint_left->GetScopedName(), 100.0);
-
+    
       // Apply the P-controller to the joint.
       this->model->GetJointController()->SetVelocityPID(
           this->joint_right->GetScopedName(), this->pid);
-
-      // Set the joint's target velocity. This target velocity is just
-      // for demonstration purposes.
-      this->model->GetJointController()->SetVelocityTarget(
-          this->joint_right->GetScopedName(), 50.0);
-      
+          
             // Initialize ros, if it has not already bee initialized.
       if (!ros::isInitialized())
       {
@@ -120,8 +107,10 @@ namespace gazebo
         std::thread(std::bind(&VelodynePlugin::QueueThread, this));
       }
 
-      public: void SetVelocity(const double &left, const double &right = 10)
-      {
+      public: void SetVelocity(const double &left, const double &right)
+      { 
+        std::cerr << "SetVelocity: " << left << " " << right << "\n";
+
         // Set the joint's target velocity.
         this->model->GetJointController()->SetVelocityTarget(
         this->joint_left->GetScopedName(), left);

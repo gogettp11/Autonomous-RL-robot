@@ -1,7 +1,8 @@
 import cv2 as cv
 import numpy as np
 import rospy
-from ..abc_vision import Camera_abc
+# from ..abc_vision import Camera_abc
+from std_msgs.msg import ByteMultiArray
 
 # lower boundary RED color range values; Hue (0 - 10)
 lower1 = np.array([0, 100, 100])
@@ -13,15 +14,25 @@ upper2 = np.array([179,255,255])
 
 CHUNKS = 5
 
-class Camera_sim(Camera_abc):
+class Camera_sim(object):
     def __init__(self):
-        self.__camera = cv.VideoCapture(0)
+        self.image = None
+        rospy.init_node('camera_sim', anonymous=True)
+        rospy.Subscriber('/camera1_ros/image_raw', ByteMultiArray, self.imageCallback)
+    
+    def imageCallback(self, data : ByteMultiArray, cb_args = None):
+        self.image = data
 
     def getImageRedPixelsCount(self):
-        ret,img = self.__camera.read()
 
-        if img is None:
-            return "error"
+        while self.image is None:
+            print("waiting for image...")
+            rospy.sleep(1)
+        
+        img = self.image.deserialize_numpy()
+        img = np.array(img.data)
+
+        self.image = None
 
         img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
         lower_mask = cv.inRange(img_hsv, lower1, upper1)
@@ -43,5 +54,9 @@ class Camera_sim(Camera_abc):
 
         return temp_array
 
-if __name__ == 'main':
-    pass
+if __name__ == '__main__':
+    # test of getImageRedPixelsCount()
+    camera = Camera_sim()
+    while True:
+        print(camera.getImageRedPixelsCount())
+        rospy.sleep(10)

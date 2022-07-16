@@ -14,4 +14,4 @@ rviz -> after opening you can add by topic
 
 Instruction for starting:
 1. compile *.so from gazebo_plugins cmake CMakeLists.txt ./build and then make
-2. move libmove_plugin.so to directory with robot sdf file
+2. move libmove_plugin.so ros/noetic/lib
