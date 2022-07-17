@@ -6,7 +6,6 @@ import threading
 class Microphone_sim(object):
     def __init__(self):
         # robot position subscriber
-        rospy.init_node('microphone_sim')
         self.__sub = rospy.Subscriber('/gazebo/model_states', ModelStates, self.__callback)
         self.robot_name = 'TinyBot_camera_friction_test'
         self.current_position = None

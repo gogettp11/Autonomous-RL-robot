@@ -12,6 +12,7 @@ class RealWorldEnv(gym.Env):
             from JetsonNano.enviroment_lib.simulation.steer import Steer_sim
             from JetsonNano.enviroment_lib.simulation.hearing import Microphone_sim
             from JetsonNano.enviroment_lib.simulation.vision import Camera_sim
+            rospy.init_node('robot')
             self.__steer = Steer_sim()
             self.__camera = Camera_sim()
             self.__microphone = Microphone_sim()
@@ -46,16 +47,20 @@ class RealWorldEnv(gym.Env):
         cam_obs = self.__camera.getImageRedPixelsCount() # are there red objects in front of the robot? :[x,x,x,x,x]
         sound_amp = self.__microphone.returnFrequenciesMagnitudes() # how far is the sound from the microphone/goal position? :int
 
-        if(cam_obs[len(cam_obs//2)] >= VISION_REWARD_THRESHOLD):
-            reward -= 2
+        for i in range(3): # camera observation space is 5 so middle has index 2
+            if cam_obs[2-i] >= VISION_REWARD_THRESHOLD:
+                reward -= 0.25*(3-i) # 3 to not multiply by 0
+            if cam_obs[2+i] >= VISION_REWARD_THRESHOLD:
+                reward -= 0.25*(3-i)
         
         if(sound_amp - self.sound_before > SOUND_REWARD_THRESHOLD):
             reward += 1
 
         if(sound_amp <= SOUND_FINISH_THRESHOLD):
+            reward += 10
             done = True
 
-        obs = np.concatenate([self.cam_before, cam_obs, sound_amp - self.sound_before])
+        obs = np.concatenate([self.cam_before, cam_obs, np.expand_dims(sound_amp - self.sound_before , axis=0)])
         self.sound_before = sound_amp
         self.cam_before = cam_obs
 

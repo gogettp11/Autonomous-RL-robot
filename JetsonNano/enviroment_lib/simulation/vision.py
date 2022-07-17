@@ -19,7 +19,6 @@ CHUNKS = 5
 class Camera_sim(object):
     def __init__(self):
         self.image = None
-        rospy.init_node('camera_sim')
         a = rospy.Subscriber('/camera1_ros/image_raw', Image, self.imageCallback)
         self.lock = threading.Lock()
     
