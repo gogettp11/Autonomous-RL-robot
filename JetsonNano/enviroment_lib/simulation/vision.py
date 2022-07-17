@@ -2,7 +2,9 @@ import cv2 as cv
 import numpy as np
 import rospy
 # from ..abc_vision import Camera_abc
-from std_msgs.msg import ByteMultiArray
+# from std_msgs.msg import Image
+from sensor_msgs.msg import Image
+import threading
 
 # lower boundary RED color range values; Hue (0 - 10)
 lower1 = np.array([0, 100, 100])
@@ -17,24 +19,26 @@ CHUNKS = 5
 class Camera_sim(object):
     def __init__(self):
         self.image = None
-        rospy.init_node('camera_sim', anonymous=True)
-        rospy.Subscriber('/camera1_ros/image_raw', ByteMultiArray, self.imageCallback)
+        rospy.init_node('camera_sim')
+        a = rospy.Subscriber('/camera1_ros/image_raw', Image, self.imageCallback)
+        self.lock = threading.Lock()
     
-    def imageCallback(self, data : ByteMultiArray, cb_args = None):
-        self.image = data
+    def imageCallback(self, data, cb_args = None):
+        with self.lock:
+            self.image = data
 
     def getImageRedPixelsCount(self):
 
         while self.image is None:
-            print("waiting for image...")
-            rospy.sleep(1)
+            rospy.sleep(0.1)
         
-        img = self.image.deserialize_numpy()
-        img = np.array(img.data)
+        with self.lock:
+            image = self.image
+            self.image = None
+        img = np.frombuffer(image.data, dtype=np.uint8)
+        img = np.reshape(img, (image.height, image.width, 3))
 
-        self.image = None
-
-        img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+        img_hsv = cv.cvtColor(img, cv.COLOR_RGB2HSV)
         lower_mask = cv.inRange(img_hsv, lower1, upper1)
         upper_mask = cv.inRange(img_hsv, lower2, upper2)
         
@@ -59,4 +63,3 @@ if __name__ == '__main__':
     camera = Camera_sim()
     while True:
         print(camera.getImageRedPixelsCount())
-        rospy.sleep(10)

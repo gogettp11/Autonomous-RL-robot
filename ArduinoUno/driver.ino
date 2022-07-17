@@ -1,8 +1,5 @@
 #include <AFMotor.h>
 
-AF_DCMotor motor_left(2);
-AF_DCMotor motor_right(1);
-
 struct MotorHandler{
     AF_DCMotor motor_left(2);
     AF_DCMotor motor_right(1);
@@ -16,7 +13,7 @@ struct MotorHandler{
       this->motor_left.run(RELEASE);
       this->motor_right.run(RELEASE);
     }
-    void goForward(int seconds){
+    void goForward(int miliseconds){
       this->motor_left.setSpeed(200);
       this->motor_right.setSpeed(200);
       this->motor_right.run(FORWARD);
@@ -52,7 +49,7 @@ void loop() {
     int miliseconds = incoming_data.toInt();
 
     if(miliseconds == 0)
-      miliseconds = 500;
+      miliseconds = 1000;
     
     // move
     if(direction=='L'){

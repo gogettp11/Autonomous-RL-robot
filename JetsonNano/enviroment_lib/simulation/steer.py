@@ -1,29 +1,32 @@
 import rospy
-from ..abc_steer import Steer_abc
+from std_msgs.msg import ByteMultiArray
+# from ..abc_steer import Steer_abc
 
-class Steer_sim(Steer_abc):
+class Steer_sim(object):
     def __init__(self):
-        self.__serial = serial.Serial('/dev/ttyUSB0')
+        rospy.init_node('steer_sim')
+        self.__pub = rospy.Publisher('/vel_cmd', ByteMultiArray, queue_size=1)
+
     def goRight(self, lenght : int):
-        self.__serial.write(b'R' + str(lenght).encode())
-        data = self.__serial.read(1)
-        if(data.decode() != 'R'):
-            return False
+        self.__pub.publish(ByteMultiArray(data=[0x40, 0x0]))
+        rospy.sleep(lenght)
         return True
 
     def goLeft(self, lenght : int):
-        self.__serial.write(b'L' + str(lenght).encode())
-        data = self.__serial.read(1) 
-        if(data.decode() != 'L'):
-            return False
+        self.__pub.publish(ByteMultiArray(data=[0x0, 0x40]))
+        rospy.sleep(lenght)
         return True
 
     def goForward(self, lenght : int):
-        self.__serial.write(b'F' + str(lenght).encode())
-        data = self.__serial.read(1)
-        if(data.decode() != 'F'):
-            return False
+        self.__pub.publish(ByteMultiArray(data=[0x40, 0x40]))
+        rospy.sleep(lenght)
         return True
 
-if __name__ == 'main':
-    pass
+if __name__ == '__main__':
+    # test for steering
+    steer = Steer_sim()
+    # sequence of commands in loop
+    while True:
+        steer.goForward(1)
+        steer.goLeft(1)
+        steer.goRight(1)

@@ -1,30 +1,30 @@
 import gym
-
-#real
-from JetsonNano.enviroment_lib.real_world.steer import Steer
-from JetsonNano.enviroment_lib.real_world.hearing import Microphone
-from JetsonNano.enviroment_lib.real_world.vision import Camera
-#simulation
-from JetsonNano.enviroment_lib.simulation.steer import Steer_sim
-from JetsonNano.enviroment_lib.simulation.hearing import Microphone_sim
-from JetsonNano.enviroment_lib.simulation.vision import Camera_sim
+import rospy
+import numpy as np
 
 SOUND_REWARD_THRESHOLD = 80
-SOUND_FINISH_THRESHOLD = 2000
+SOUND_FINISH_THRESHOLD = 1
 VISION_REWARD_THRESHOLD = 4
 
 class RealWorldEnv(gym.Env):
     def __init__(self, simulation = False):
         if simulation:
+            from JetsonNano.enviroment_lib.simulation.steer import Steer_sim
+            from JetsonNano.enviroment_lib.simulation.hearing import Microphone_sim
+            from JetsonNano.enviroment_lib.simulation.vision import Camera_sim
             self.__steer = Steer_sim()
             self.__camera = Camera_sim()
             self.__microphone = Microphone_sim()
         else:
+            from JetsonNano.enviroment_lib.real_world.steer import Steer
+            from JetsonNano.enviroment_lib.real_world.hearing import Microphone
+            from JetsonNano.enviroment_lib.real_world.vision import Camera
             self.__steer = Steer()
             self.__camera = Camera()
             self.__microphone = Microphone()
         self.__movement_len = 1000 # in miliseconds
         self.sound_before = 0
+        self.cam_before = [0, 0, 0, 0, 0]
 
     # return new_observations, reward, is_done
     def step(self, action): # action space = {0,1,2}
@@ -43,8 +43,8 @@ class RealWorldEnv(gym.Env):
         if not result:
             return None, None, None, None
         
-        cam_obs = self.__camera.getImageRedPixelsCount()
-        sound_amp = self.__microphone.returnFrequenciesMagnitudes() # stop for one sec and listen
+        cam_obs = self.__camera.getImageRedPixelsCount() # are there red objects in front of the robot? :[x,x,x,x,x]
+        sound_amp = self.__microphone.returnFrequenciesMagnitudes() # how far is the sound from the microphone/goal position? :int
 
         if(cam_obs[len(cam_obs//2)] >= VISION_REWARD_THRESHOLD):
             reward -= 2
@@ -52,8 +52,12 @@ class RealWorldEnv(gym.Env):
         if(sound_amp - self.sound_before > SOUND_REWARD_THRESHOLD):
             reward += 1
 
-        if(sound_amp > SOUND_FINISH_THRESHOLD):
+        if(sound_amp <= SOUND_FINISH_THRESHOLD):
             done = True
+
+        obs = np.concatenate([self.cam_before, cam_obs, sound_amp - self.sound_before])
+        self.sound_before = sound_amp
+        self.cam_before = cam_obs
 
         return cam_obs, done, reward, None
  
@@ -63,5 +67,13 @@ class RealWorldEnv(gym.Env):
     def render(self, mode='human', close=False):
         pass
 
-if __name__ == 'main':
-    pass
+if __name__ == '__main__':
+    # test enviroment with random agent
+    env = RealWorldEnv(simulation = True)
+    while True:
+        action = np.random.randint(0, 3)
+        obs, done, reward, info = env.step(action)
+        print(obs, done, reward, info)
+        if done:
+            break
+        rospy.sleep(1)
