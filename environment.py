@@ -22,7 +22,7 @@ class RealWorldEnv(gym.Env):
             self.__steer = Steer()
             self.__camera = Camera()
             self.__microphone = Microphone()
-        self.__movement_len = 500 # in miliseconds
+        self.__movement_len = 200 # in miliseconds
         self.sound_before = 0
         self.cam_before = [0, 0, 0, 0, 0]
 

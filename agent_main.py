@@ -8,7 +8,7 @@ import random
 
 REPLAY_MEMORY_SIZE = 100000
 BATCH_SIZE = 64
-MAX_STEPS = 30
+MAX_STEPS = 40
 EPISODES = 2000
 SAVE_DATA_PATH = 'replay_memory.pkl'
 SAVE_MODEL_PATH = 'q_network.h5'
@@ -209,4 +209,5 @@ def test():
     print(episode_reward)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    test()
