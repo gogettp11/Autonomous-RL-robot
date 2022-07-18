@@ -38,6 +38,10 @@ class Microphone_sim(object):
         distance = np.round(np.sqrt((x - self.goal_position[0])**2 + (y - self.goal_position[1])**2))
         return distance
 
+    # reset
+    def reset(self):
+        self.current_position = None
+        return True
 
 if __name__ == '__main__':
     # test for microphone

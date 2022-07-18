@@ -56,6 +56,11 @@ class Camera_sim(object):
             chunk_end += chunk_size
 
         return temp_array
+    
+    # reset
+    def reset(self):
+        self.image = None
+        return True
 
 if __name__ == '__main__':
     # test of getImageRedPixelsCount()

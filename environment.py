@@ -2,7 +2,6 @@ import gym
 import rospy
 import numpy as np
 
-SOUND_REWARD_THRESHOLD = 80
 SOUND_FINISH_THRESHOLD = 1
 VISION_REWARD_THRESHOLD = 4
 
@@ -53,7 +52,7 @@ class RealWorldEnv(gym.Env):
             if cam_obs[2+i] >= VISION_REWARD_THRESHOLD:
                 reward -= 0.25*(3-i)
         
-        if(sound_amp - self.sound_before > SOUND_REWARD_THRESHOLD):
+        if(sound_amp - self.sound_before > 0):
             reward += 1
 
         if(sound_amp <= SOUND_FINISH_THRESHOLD):
@@ -64,21 +63,31 @@ class RealWorldEnv(gym.Env):
         self.sound_before = sound_amp
         self.cam_before = cam_obs
 
-        return cam_obs, done, reward, None
+        print(f'obs: {obs} reward: {reward} done: {done}')
+
+        return obs, done, reward, None
  
     def reset(self):
-        print("you have to do it by yourself")
+        # reset devices
+        self.__steer.reset()
+        self.__camera.reset()
+        self.__microphone.reset()
+        print("reset!")
+        return np.zeros(11)
  
     def render(self, mode='human', close=False):
         pass
 
-if __name__ == '__main__':
-    # test enviroment with random agent
-    env = RealWorldEnv(simulation = True)
-    while True:
-        action = np.random.randint(0, 3)
-        obs, done, reward, info = env.step(action)
-        print(obs, done, reward, info)
-        if done:
-            break
-        rospy.sleep(1)
+# if __name__ == '__main__':
+#     # test enviroment with random agent
+#     env = RealWorldEnv(simulation = True)
+#     while True:
+#         action = np.random.randint(0, 3)
+#         obs, done, reward, info = env.step(action)
+#         print(obs, done, reward, info)
+#         if done:
+#             break
+
+# test reset
+env = RealWorldEnv(simulation = True)
+env.reset()

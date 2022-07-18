@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jul 17 10:46:30 2022
+# Make data base, printed on Mon Jul 18 12:47:56 2022
 
 # Variables
 
@@ -121,7 +119,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 ROS_DISTRO = noetic
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-oRx3jCPIXlmE/agent.2563
+SSH_AUTH_SOCK = /tmp/ssh-HhfhaJZbFc3V/agent.2562
 # automatic
 %F = $(notdir $%)
 # environment
@@ -141,7 +139,7 @@ KDE_SESSION_VERSION = 5
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 2607
+SSH_AGENT_PID = 2606
 # environment
 PKG_CONFIG_PATH = /opt/ros/noetic/lib/pkgconfig
 # environment
@@ -187,7 +185,7 @@ SNAP_REAL_HOME = /home/kszymczyk
 # environment
 COLORTERM = truecolor
 # environment
-KONSOLE_DBUS_SESSION = /Sessions/2
+KONSOLE_DBUS_SESSION = /Sessions/4
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -237,7 +235,7 @@ MFLAGS = -pqrR
 # environment
 ROS_VERSION = 1
 # environment
-SHELL_SESSION_ID = d34fb4e210b14c55ad33ce37a2b73dc3
+SHELL_SESSION_ID = 198019dd55ae466d86ecc811acbab9eb
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
@@ -273,7 +271,7 @@ SNAP_REEXEC =
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
-KONSOLE_DBUS_SERVICE = :1.53
+KONSOLE_DBUS_SERVICE = :1.55
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -287,22 +285,24 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 8451
+VSCODE_PID = 30922
 # environment
 KDE_SESSION_UID = 1000
 # variable set hash-table stats:
 # Load=139/1024=14%, Rehash=0, Collisions=19/161=12%
+
+ 
+make: *** No rule to make target 'all'.  Stop.
 
 # Pattern-specific Variable Values
 
 # No pattern-specific variable values.
 
 # Directories
- 
 
-# . (device 66309, inode 5506430): 11 files, no impossibilities.
+# . (device 66309, inode 5506430): 17 files, no impossibilities.
 
-# 11 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -352,12 +352,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 19 / storage = 187 B / avg = 9 B
-# current buf: size = 8162 B / used = 187 B / count = 19 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 25 / storage = 254 B / avg = 10 B
+# current buf: size = 8162 B / used = 254 B / count = 25 / avg = 10 B
 
-# strcache performance: lookups = 22 / hit rate = 13%
+# strcache performance: lookups = 28 / hit rate = 10%
 # hash-table stats:
-# Load=19/8192=0%, Rehash=0, Collisions=1/22=5%
-# Finished Make data base on Sun Jul 17 10:46:30 2022
+# Load=25/8192=0%, Rehash=0, Collisions=1/28=4%
+# Finished Make data base on Mon Jul 18 12:47:56 2022
 
  
