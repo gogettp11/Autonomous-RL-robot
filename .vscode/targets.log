@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul 18 12:47:56 2022
+# Make data base, printed on Mon Jul 18 20:12:21 2022
 
 # Variables
 
@@ -79,7 +79,7 @@ VSCODE_CWD = /home/kszymczyk
 # environment
 PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session5
 # environment
 GSETTINGS_SCHEMA_DIR = /snap/code/101/usr/share/glib-2.0/schemas
 # default
@@ -99,7 +99,7 @@ GDK_PIXBUF_MODULE_FILE = /home/kszymczyk/snap/code/common/.cache/gdk-pixbuf-load
 # environment
 SNAP = /snap/code/101
 # environment
-WINDOWID = 52428807
+WINDOWID = 50331655
 # environment
 ROS_ROOT = /opt/ros/noetic/share/ros
 # environment
@@ -119,7 +119,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 ROS_DISTRO = noetic
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-HhfhaJZbFc3V/agent.2562
+SSH_AUTH_SOCK = /tmp/ssh-Mr69zTuIu8yi/agent.89110
 # automatic
 %F = $(notdir $%)
 # environment
@@ -139,7 +139,7 @@ KDE_SESSION_VERSION = 5
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 2606
+SSH_AGENT_PID = 89159
 # environment
 PKG_CONFIG_PATH = /opt/ros/noetic/lib/pkgconfig
 # environment
@@ -185,7 +185,7 @@ SNAP_REAL_HOME = /home/kszymczyk
 # environment
 COLORTERM = truecolor
 # environment
-KONSOLE_DBUS_SESSION = /Sessions/4
+KONSOLE_DBUS_SESSION = /Sessions/1
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -195,7 +195,7 @@ SNAP_USER_DATA = /home/kszymczyk/snap/code/101
 # environment
 SHLVL = 1
 # environment
-XDG_SESSION_ID = 3
+XDG_SESSION_ID = 34
 # environment
 USER = kszymczyk
 # environment
@@ -235,7 +235,7 @@ MFLAGS = -pqrR
 # environment
 ROS_VERSION = 1
 # environment
-SHELL_SESSION_ID = 198019dd55ae466d86ecc811acbab9eb
+SHELL_SESSION_ID = 3740aece67c34ef0b085c582e2462c80
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
@@ -271,7 +271,7 @@ SNAP_REEXEC =
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
-KONSOLE_DBUS_SERVICE = :1.55
+KONSOLE_DBUS_SERVICE = :1.5109
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -285,14 +285,11 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 30922
+VSCODE_PID = 90864
 # environment
 KDE_SESSION_UID = 1000
 # variable set hash-table stats:
 # Load=139/1024=14%, Rehash=0, Collisions=19/161=12%
-
- 
-make: *** No rule to make target 'all'.  Stop.
 
 # Pattern-specific Variable Values
 
@@ -300,9 +297,12 @@ make: *** No rule to make target 'all'.  Stop.
 
 # Directories
 
-# . (device 66309, inode 5506430): 17 files, no impossibilities.
+ 
+make: *** No rule to make target 'all'.  Stop.
 
-# 17 files, no impossibilities in 1 directories.
+# . (device 66309, inode 5506430): 19 files, no impossibilities.
+
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -352,12 +352,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 25 / storage = 254 B / avg = 10 B
-# current buf: size = 8162 B / used = 254 B / count = 25 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 27 / storage = 290 B / avg = 10 B
+# current buf: size = 8162 B / used = 290 B / count = 27 / avg = 10 B
 
-# strcache performance: lookups = 28 / hit rate = 10%
+# strcache performance: lookups = 30 / hit rate = 10%
 # hash-table stats:
-# Load=25/8192=0%, Rehash=0, Collisions=1/28=4%
-# Finished Make data base on Mon Jul 18 12:47:56 2022
+# Load=27/8192=0%, Rehash=0, Collisions=1/30=3%
+# Finished Make data base on Mon Jul 18 20:12:21 2022
 
  

@@ -3,7 +3,7 @@ import rospy
 import numpy as np
 
 SOUND_FINISH_THRESHOLD = 1
-VISION_REWARD_THRESHOLD = 4
+VISION_REWARD_THRESHOLD = 3
 
 class RealWorldEnv(gym.Env):
     def __init__(self, simulation = False):
@@ -22,7 +22,7 @@ class RealWorldEnv(gym.Env):
             self.__steer = Steer()
             self.__camera = Camera()
             self.__microphone = Microphone()
-        self.__movement_len = 1000 # in miliseconds
+        self.__movement_len = 500 # in miliseconds
         self.sound_before = 0
         self.cam_before = [0, 0, 0, 0, 0]
 
@@ -52,8 +52,10 @@ class RealWorldEnv(gym.Env):
             if cam_obs[2+i] >= VISION_REWARD_THRESHOLD:
                 reward -= 0.25*(3-i)
         
-        if(sound_amp - self.sound_before > 0):
-            reward += 1
+        if(sound_amp - self.sound_before >= 0):
+            reward += 2.5
+        else:
+            reward -= 1
 
         if(sound_amp <= SOUND_FINISH_THRESHOLD):
             reward += 10
@@ -63,7 +65,7 @@ class RealWorldEnv(gym.Env):
         self.sound_before = sound_amp
         self.cam_before = cam_obs
 
-        print(f'obs: {obs} reward: {reward} done: {done}')
+        # print(f'obs: {obs} reward: {reward} done: {done}')
 
         return obs, done, reward, None
  

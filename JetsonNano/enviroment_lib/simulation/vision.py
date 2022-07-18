@@ -5,6 +5,7 @@ import rospy
 # from std_msgs.msg import Image
 from sensor_msgs.msg import Image
 import threading
+import time
 
 # lower boundary RED color range values; Hue (0 - 10)
 lower1 = np.array([0, 100, 100])
@@ -29,7 +30,7 @@ class Camera_sim(object):
     def getImageRedPixelsCount(self):
 
         while self.image is None:
-            rospy.sleep(0.1)
+            time.sleep(0.1)
         
         with self.lock:
             image = self.image

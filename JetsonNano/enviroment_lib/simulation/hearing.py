@@ -2,6 +2,7 @@ import rospy
 import numpy as np
 from gazebo_msgs.msg import ModelStates
 import threading
+import time
 
 class Microphone_sim(object):
     def __init__(self):
@@ -13,7 +14,7 @@ class Microphone_sim(object):
         self.goal_position = (10, 10)
 
         while self.current_position is None:
-            rospy.sleep(0.1)
+            time.sleep(0.1)
         
         self.index = self.current_position.name.index(self.robot_name)
 
@@ -24,7 +25,7 @@ class Microphone_sim(object):
     def returnFrequenciesMagnitudes(self):
         
         while self.current_position is None:
-            rospy.sleep(0.1)
+            time.sleep(0.1)
         
         with self.lock:
             current_position = self.current_position
@@ -35,7 +36,7 @@ class Microphone_sim(object):
         y = pos.y
 
         # calculate distance between current position and goal position
-        distance = np.round(np.sqrt((x - self.goal_position[0])**2 + (y - self.goal_position[1])**2))
+        distance = np.sqrt((x - self.goal_position[0])**2 + (y - self.goal_position[1])**2)
         return distance
 
     # reset
@@ -46,7 +47,9 @@ class Microphone_sim(object):
 if __name__ == '__main__':
     # test for microphone
     microphone = Microphone_sim()
-    # check if the robot is in the right position
-    while True:
-        print(microphone.returnFrequenciesMagnitudes())
-        rospy.sleep(0.2)
+REPLAY_MEMORY_SIZE = 100000
+BATCH_SIZE = 32
+MAX_STEPS = 20
+EPISODES = 1000
+SAVE_DATA_PATH = 'replay_memory.pkl'
+SAVE_MODEL_PATH = 'q_network.h5'

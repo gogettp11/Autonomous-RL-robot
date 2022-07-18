@@ -1,4 +1,5 @@
 import rospy
+import time
 import numpy as np
 from std_msgs.msg import ByteMultiArray
 from std_srvs.srv import Empty
@@ -11,20 +12,20 @@ class Steer_sim(object):
 
     def goRight(self, lenght : int):
         lenght = np.divide(lenght, 1000) # ms to s
-        self.__pub.publish(ByteMultiArray(data=[0x40, 0x0]))
-        rospy.sleep(lenght)
+        self.__pub.publish(ByteMultiArray(data=[0x25, 0x0]))
+        time.sleep(lenght)
         return True
 
     def goLeft(self, lenght : int):
         lenght = np.divide(lenght, 1000) # ms to s
-        self.__pub.publish(ByteMultiArray(data=[0x0, 0x40]))
-        rospy.sleep(lenght)
+        self.__pub.publish(ByteMultiArray(data=[0x0, 0x25]))
+        time.sleep(lenght)
         return True
 
     def goForward(self, lenght : int):
         lenght = np.divide(lenght, 1000) # ms to s
         self.__pub.publish(ByteMultiArray(data=[0x40, 0x40]))
-        rospy.sleep(lenght)
+        time.sleep(lenght)
         return True
     
     # reset the robot position
