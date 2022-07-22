@@ -7,6 +7,7 @@ Hardware:
     2 dc motors
 Software:
     Deep Learning RL Agent acting in gym-like env
+    ros noetic with gazebo, rviz and rospy packages
 
 Rostopic list for checking avaiable topics
 rosrun rviz rviz -> after opening you can add by topic and check what robot see
@@ -19,5 +20,14 @@ Instruction for starting:
 5. start the main script
 
 On device:
-crontab -e -> @reboot /home/user/Autonomous-RL-robot/agent_main.py
-chmod +x agent_main.py
+0. sudo apt install postfix
+
+1. crontab -e -> @reboot python3 /home/user/Autonomous-RL-robot/agent_main.py
+2. chmod +x agent_main.py
+OR
+1. write script to /etc/init.d dir 
+    #!/etc/sh 
+    python3 /home/user/Autonomous-RL-robot/agent_main.py
+2. chmod +x script
+
+3. export OPENBLAS_CORETYPE=ARMV8 or add to etc/enviroment OPENBLAS_CORETYPE=ARMV8

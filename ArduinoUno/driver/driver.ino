@@ -5,15 +5,13 @@ struct MotorHandler{
     AF_DCMotor *motor_right;
     
     MotorHandler(){
-//      AF_DCMotor motor_left(2);
-//      AF_DCMotor motor_right(1);
         this->motor_left = new AF_DCMotor(1);
         this->motor_right = new AF_DCMotor(2);
     }
 
     void goRight(int miliseconds){
-      this->motor_left->setSpeed(200);
-      this->motor_right->setSpeed(100);
+      this->motor_left->setSpeed(255);
+      this->motor_right->setSpeed(0);
       this->motor_left->run(FORWARD);
       this->motor_right->run(FORWARD);
       delay(miliseconds);
@@ -21,8 +19,8 @@ struct MotorHandler{
       this->motor_right->run(RELEASE);
     }
     void goForward(int miliseconds){
-      this->motor_left->setSpeed(200);
-      this->motor_right->setSpeed(200);
+      this->motor_left->setSpeed(180);
+      this->motor_right->setSpeed(255);
       this->motor_right->run(FORWARD);
       this->motor_left->run(FORWARD);
       delay(miliseconds);
@@ -30,8 +28,8 @@ struct MotorHandler{
       this->motor_right->run(RELEASE);
     }
     void goLeft(int miliseconds){
-      this->motor_left->setSpeed(100);
-      this->motor_right->setSpeed(200);
+      this->motor_left->setSpeed(0);
+      this->motor_right->setSpeed(255);
       this->motor_right->run(FORWARD);
       this->motor_left->run(FORWARD);
       delay(miliseconds);
@@ -43,11 +41,6 @@ struct MotorHandler{
 void setup() {
   Serial.begin(9600);
   Serial.write("it works!");
-
-  // test
-  steer.goForward(1000);
-  steer.goLeft(1000);
-  steer.goRight(1000);
 }
 
 // the loop function runs over and over again forever
