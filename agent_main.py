@@ -208,6 +208,33 @@ def test():
         state = next_state
     print(episode_reward)
 
+# real world play function with the agent
+def play():
+    done = False
+    steps = 0
+    episode_reward = 0
+    env = RealWorldEnv(simulation = False)
+    q_network = QNetwork()
+    state = env.reset()
+    while not done and steps < 70:
+        temp_state = np.expand_dims(state, axis=0)
+        action = q_network.predict(temp_state)
+        next_state, done, reward, info = env.step(action)
+        episode_reward += reward
+        state = next_state
+        steps += 1
+    with open('real_world_reward.txt', 'a') as f:
+        f.write(f'episode reward {episode_reward} in {steps} steps \n')
+
+# print something
+def print_something():
+    print('hello world')
+    # import subprocess
+    # subprocess.call(['mkdir', 'test'])
+    with open('/home/gogettp11/Autonomous-RL-robot/real_world_reward.txt', 'a') as f:
+        f.write(f'test\n')
+
 if __name__ == '__main__':
     # main()
-    test()
+    # test()
+    print_something()

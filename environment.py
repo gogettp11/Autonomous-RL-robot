@@ -1,5 +1,4 @@
 import gym
-import rospy
 import numpy as np
 
 SOUND_FINISH_THRESHOLD = 1
@@ -8,6 +7,7 @@ VISION_REWARD_THRESHOLD = 3
 class RealWorldEnv(gym.Env):
     def __init__(self, simulation = False):
         if simulation:
+            import rospy
             from JetsonNano.enviroment_lib.simulation.steer import Steer_sim
             from JetsonNano.enviroment_lib.simulation.hearing import Microphone_sim
             from JetsonNano.enviroment_lib.simulation.vision import Camera_sim
@@ -91,5 +91,6 @@ class RealWorldEnv(gym.Env):
 #             break
 
 # test reset
-env = RealWorldEnv(simulation = True)
-env.reset()
+if __name__ == '__main__':
+    env = RealWorldEnv(simulation = True)
+    env.reset()

@@ -17,3 +17,7 @@ Instruction for starting:
 3. start 'roscore' and wait
 4. start 'rosrun gazebo_ros gazebo training_world.xml' and wait
 5. start the main script
+
+On device:
+crontab -e -> @reboot /home/user/Autonomous-RL-robot/agent_main.py
+chmod +x agent_main.py

@@ -7,8 +7,8 @@ struct MotorHandler{
     MotorHandler(){
 //      AF_DCMotor motor_left(2);
 //      AF_DCMotor motor_right(1);
-        this->motor_left = new AF_DCMotor(2);
-        this->motor_right = new AF_DCMotor(1);
+        this->motor_left = new AF_DCMotor(1);
+        this->motor_right = new AF_DCMotor(2);
     }
 
     void goRight(int miliseconds){
