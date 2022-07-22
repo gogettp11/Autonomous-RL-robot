@@ -1,7 +1,7 @@
 import serial
-from ..abc_steer import Steer_abc
+# from ..abc_steer import Steer_abc
 
-class Steer(Steer_abc):
+class Steer(object):
     def __init__(self):
         self.__serial = serial.Serial('/dev/ttyUSB0')
     def goRight(self, lenght : int):
@@ -25,5 +25,9 @@ class Steer(Steer_abc):
             return False
         return True
 
-if __name__ == 'main':
-    pass
+if __name__ == '__main__':
+    # test 
+    steer = Steer()
+    steer.goRight(300)
+    steer.goLeft(300)
+    steer.goForward(300)
